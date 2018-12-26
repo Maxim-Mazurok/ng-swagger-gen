@@ -235,21 +235,27 @@ function doGenerate(swagger, options) {
 
   // Write the configuration
   {
-    // Following code ported from io.swagger.codegen.DefaultGenerator#getHost with some changes for issue #113
-    var rootUrlBuilder = [];
-    if (swagger.hasOwnProperty('host') && swagger.host !== '') {
-      var schemes = swagger.schemes || [];
-      var scheme = schemes.length === 0 ? 'https' : schemes[0];
-      rootUrlBuilder.push(scheme);
-      rootUrlBuilder.push('://');
-      rootUrlBuilder.push(swagger.host);
+    var rootUrl;
+    if (options.overrideRootUrl) {
+      rootUrl = options.overrideRootUrl;
     } else {
-      console.warn('\'host\' not defined in the spec. Default to relative basePath only.');
+      // Following code ported from io.swagger.codegen.DefaultGenerator#getHost with some changes for issue #113
+      var rootUrlBuilder = [];
+      if (swagger.hasOwnProperty('host') && swagger.host !== '') {
+        var schemes = swagger.schemes || [];
+        var scheme = schemes.length === 0 ? 'https' : schemes[0];
+        rootUrlBuilder.push(scheme);
+        rootUrlBuilder.push('://');
+        rootUrlBuilder.push(swagger.host);
+      } else {
+        console.warn('\'host\' not defined in the spec. Default to relative basePath only.');
+      }
+      if (swagger.hasOwnProperty('basePath') && swagger.basePath !== '' && swagger.basePath !== '/') {
+        rootUrlBuilder.push(swagger.basePath);
+      }
+      rootUrl = rootUrlBuilder.join('');
+      rootUrl = `'${rootUrl}'`;
     }
-    if (swagger.hasOwnProperty('basePath') && swagger.basePath !== '' && swagger.basePath !== '/') {
-      rootUrlBuilder.push(swagger.basePath);
-    }
-    var rootUrl = rootUrlBuilder.join('');
 
     generate(templates.configuration, applyGlobals({
         rootUrl: rootUrl,

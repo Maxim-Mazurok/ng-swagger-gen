@@ -52,7 +52,9 @@
       "description": "How to sort operation parameters. Required always come first. For backwards compatibility, the default value is 'desc', but 'none' is recommended for new projects.",
       "type": "string",
       "enum": [
-        "none", "asc", "desc"
+        "none",
+        "asc",
+        "desc"
       ],
       "default": "desc"
     },
@@ -94,6 +96,10 @@
       "description": "Indicates whether or not to generate the example files from the example sections of the models. Defaults to false.",
       "type": "boolean",
       "default": "false"
+    },
+    "overrideRootUrl": {
+      "description": "Overrides rootUrl from swagger configuration (use to get URL from env), can be a JS code",
+      "type": "string"
     }
   }
 }
